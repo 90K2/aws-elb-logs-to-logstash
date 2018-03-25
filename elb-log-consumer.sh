@@ -44,8 +44,9 @@ reset_date
 
 # Loop through all the regions.
 while true ; do
-  for THE_PATH in `s3cmd ls s3://$S3_BUCKET_NAME/ | awk '{print $2}'` ; do
-    for THE_REGION in `s3cmd ls "$THE_PATH"AWSLogs/$AWS_ACCOUNT_NUMBER/elasticloadbalancing/ | awk '{print $2}' | xargs -I{} basename {}` ; do
+#  for THE_PATH in `s3cmd ls s3://$S3_BUCKET_NAME/ | awk '{print $2}'` ; do
+  THE_PATH="s3://$S3_BUCKET_NAME/"
+  for THE_REGION in `s3cmd ls "$THE_PATH"AWSLogs/$AWS_ACCOUNT_NUMBER/elasticloadbalancing/ | awk '{print $2}' | xargs -I{} basename {}` ; do
     THE_FILE_LIST=`s3cmd ls "$THE_PATH"AWSLogs/$AWS_ACCOUNT_NUMBER/elasticloadbalancing/$THE_REGION/$CURRENT_DATE | tail -1 | awk '{print $4}'`
     if [ -n "$THE_FILE_LIST" ] ; then
       # If the file exists in our temp file, we already downloaded it.
@@ -64,7 +65,7 @@ while true ; do
     fi
     sleep 2
     done
-  done
+#  done
   check_file_growth
   reset_date
   sleep $CHECK_INTERVAL
